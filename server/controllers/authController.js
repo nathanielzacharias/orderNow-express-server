@@ -2,22 +2,24 @@ const User = require( '../models/users')
 const jwt = require( 'jsonwebtoken')
 const expressJwt  = require( 'express-jwt')
 const config = require( './../../config/config')
+const bcrypt = require('bcrypt')
+
 
 const signin = (req, res) => {
   User.findOne({
     "email": req.body.email
-  }, (err, user) => {
+  }, async (err, user) => {
 
     if (err || !user)
       return res.status('401').json({
         error: "User not found"
       })
 
-    if (!user.authenticate(req.body.password)) {
-      return res.status('401').send({
-        error: "Email and password don't match."
-      })
-    }
+    const isPasswordOk = await bcrypt.compare(req.body.password, user.password)
+
+        if (!isPasswordOk) {
+            return res.status(401).json({error: "Email and password don't match." })
+        }
 
     const token = jwt.sign({
       _id: user._id
