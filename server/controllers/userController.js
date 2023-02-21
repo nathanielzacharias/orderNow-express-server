@@ -1,20 +1,23 @@
-const User = require( '../models/userModel')
+const User = require( '../models/users')
 const _ = require( 'lodash')
 const errorHandler = require('./../helpers/dbErrorHandler')
+const bcrypt = require('bcrypt')
 
-const create = (req, res, next) => {
-  const user = new User(req.body)
-  user.save((err, result) => {
-    if (err) {
-      return res.status(400).json({
-        error: errorHandler.getErrorMessage(err)
-      })
-    }
-    res.status(200).json({
-      message: "Successfully signed up!"
-    })
-  })
-}
+const create = async (req, res, next) => {
+  let user = new User(req.body);
+
+  const passHash = await bcrypt.hash(req.body.password, 10);
+  user = { ...req.body, password: passHash };
+
+  try {
+    await User.create(user);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "failed to register user" });
+  }
+
+  return res.json();
+};
 
 const list = (req, res) => {
     User.find((err, users) => {

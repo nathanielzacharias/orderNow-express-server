@@ -8,7 +8,11 @@ app.listen(config.port, async (err) => {
         console.log('err ===== ', err);
     } else {
         await mongoose
-                .connect(config.mongoUri, { useNewUrlParser: true } )
+                .connect(config.mongoUri, {
+                    useNewUrlParser: true,
+                    // useUnifiedTopology: true,
+                    dbName: 'orderNow',
+                  } )
                 .catch(error => console.error(error))
 
         console.log('Server listening on port ===== ', config.port);

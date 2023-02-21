@@ -1,6 +1,6 @@
-const User = require( '../models/userModel')
+const User = require( '../models/users')
 const jwt = require( 'jsonwebtoken')
-const expressJwt = require( 'express-jwt')
+const expressJwt  = require( 'express-jwt')
 const config = require( './../../config/config')
 
 const signin = (req, res) => {
@@ -44,6 +44,7 @@ const signout = (req, res) => {
 
 const requireSignin = expressJwt({
   secret: config.jwtSecret,
+  algorithms: ["HS256"],
   userProperty: 'auth'
 })
 

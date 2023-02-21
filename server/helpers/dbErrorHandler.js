@@ -14,8 +14,10 @@ const getUniqueErrorMessage = (err) => {
     return output
 }
 
+
+module.exports = {
 //get error message from error object 
-const getErrorMessage = (err) => {
+    getErrorMessage: (err) => {
     let message = ''
 
     if (err.code) {
@@ -36,4 +38,5 @@ const getErrorMessage = (err) => {
     return message
 }
 
-module.exports = getErrorMessage
+}
+// module.exports = getErrorMessage
